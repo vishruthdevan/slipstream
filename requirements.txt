@@ -1,0 +1,5 @@
+flask
+click
+sqlalchemy
+psycopg2
+python-dotenv
