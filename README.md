@@ -1,2 +1,3 @@
-# slip-stream
+# slipstream
+
 Formula 1 Database Visualizer
