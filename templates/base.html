@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>F1 Database</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>F1 Database</h1>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/circuits">Circuits</a>
+        <a href="/races">Races</a>
+        <a href="/constructors">Constructors</a>
+        <a href="/drivers">Drivers</a>
+        <a href="/standings">Standings</a>
+      </nav>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+  </body>
+</html>
