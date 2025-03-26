@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block content %}
+<h2>F1 Standings</h2>
+<ul>
+  {% for standing in standings %}
+  <li>{{ standing.name }} - {{ standing.points }} points</li>
+  {% endfor %}
+</ul>
+{% endblock %}

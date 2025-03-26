@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block content %}
+<h2>F1 Circuits</h2>
+<ul>
+  {% for circuit in circuits %}
+  <li>{{ circuit.name }} - {{ circuit.city }}, {{ circuit.country }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

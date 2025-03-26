@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block content %}
+<h2>F1 Constructors</h2>
+<ul>
+  {% for constructor in constructors %}
+  <li>{{ constructor.name }} - {{ constructor.nationality }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block content %}
+<h2>{{ circuit.name }}</h2>
+<p>{{ circuit.city }}, {{ circuit.country }}</p>
+<p>Latitude: {{ circuit.latitude }}</p>
+<p>Longitude: {{ circuit.longitude }}</p>
+<p><a href="{{ circuit.circuiturl }}">More information</a></p>
+
+{% endblock %}

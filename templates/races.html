@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% block content %}
+<h2>F1 Races</h2>
+<ul>
+  {% for race in races %}
+  <li>{{ race.name }} - {{ race.date }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}
