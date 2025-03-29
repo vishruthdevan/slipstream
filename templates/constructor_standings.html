@@ -1,0 +1,22 @@
+{% extends "base.html" %} {% block content %}
+<h2>Constructor Standings</h2>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Constructor ID</th>
+      <th>Constructor Name</th>
+      <th>Points</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for standing in standings %}
+    <tr>
+      <td>{{ standing.constructor_id }}</td>
+      <td>{{ standing.name }}</td>
+      <td>{{ standing.points }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br />
+{% endblock %}
