@@ -1,0 +1,23 @@
+{% extends "base.html" %} {% block content %}
+<h2>Driver Details</h2>
+
+<table border="1">
+  <tr>
+    <th>First Name</th>
+    <td>{{ driver.firstname }}</td>
+  </tr>
+  <tr>
+    <th>Last Name</th>
+    <td>{{ driver.lastname }}</td>
+  </tr>
+  <tr>
+    <th>Number</th>
+    <td>{{ driver.number }}</td>
+  </tr>
+  <tr>
+    <th>Nationality</th>
+    <td>{{ driver.nationality }}</td>
+  </tr>
+</table>
+<br />
+{% endblock %}
