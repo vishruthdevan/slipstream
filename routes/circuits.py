@@ -4,7 +4,7 @@ from sqlalchemy import text
 from routes import circuits_bp
 
 
-@circuits_bp.route("/circuit-detail/<int:circuit_id>/")
+@circuits_bp.route("/<int:circuit_id>/")
 def circuit_detail(circuit_id):
     """Retrieve and display details for a specific circuit."""
     query = text(
@@ -15,13 +15,14 @@ def circuit_detail(circuit_id):
     """
     )
 
-    print(query)
     cursor = g.conn.execute(query, {"circuit_id": circuit_id})
 
     circuit_data = cursor.fetchone()
     cursor.close()
 
-    return render_template("circuit_detail.html", circuit=circuit_data)
+    if circuit_data:
+        return render_template("circuit_detail.html", circuit=circuit_data)
+    return render_template("not_found.html"), 404
 
 
 @circuits_bp.route("/")
