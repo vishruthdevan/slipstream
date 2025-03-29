@@ -1,0 +1,52 @@
+{% extends "base.html" %} {% block content %}
+<h2>Race Details</h2>
+
+<table border="1">
+  <tr>
+    <th>Race Name</th>
+    <td>{{ race.name }}</td>
+  </tr>
+  <tr>
+    <th>Year</th>
+    <td>{{ race.year }}</td>
+  </tr>
+  <tr>
+    <th>Round</th>
+    <td>{{ race.round }}</td>
+  </tr>
+  <tr>
+    <th>Circuit</th>
+    <td>{{ race.circuit_name }} ({{ race.city }}, {{ race.country }})</td>
+  </tr>
+  <tr>
+    <th>Date</th>
+    <td>{{ race.date }}</td>
+  </tr>
+  <tr>
+    <th>Time</th>
+    <td>{{ race.time or "TBD" }}</td>
+  </tr>
+  <tr>
+    <th>Weather</th>
+    <td>{{ race.weather or "Unknown" }}</td>
+  </tr>
+</table>
+
+<h3>Sessions</h3>
+<ul>
+  <li>FP1: {{ race.fp1_date }} - {{ race.fp1_time or "TBD" }}</li>
+  <li>FP2: {{ race.fp2_date }} - {{ race.fp2_time or "TBD" }}</li>
+  <li>FP3: {{ race.fp3_date }} - {{ race.fp3_time or "TBD" }}</li>
+  <li>
+    Qualifying: {{ race.qualifying_date }} - {{ race.qualifying_time or "TBD" }}
+  </li>
+  <li>
+    Sprint: {{ race.sprint_date or "N/A" }} - {{ race.sprint_time or "N/A" }}
+  </li>
+</ul>
+
+<h3>Results</h3>
+
+<br />
+
+{% endblock %}
