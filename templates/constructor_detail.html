@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block content %}
+<h2>Constructor Details</h2>
+
+<table border="1">
+  <tr>
+    <th>Name</th>
+    <td>{{ constructor.name }}</td>
+  </tr>
+  <tr>
+    <th>Nationality</th>
+    <td>{{ constructor.nationality }}</td>
+  </tr>
+  <tr>
+    <th>ID</th>
+    <td>{{ constructor.constructorid }}</td>
+  </tr>
+</table>
+
+<br />
+<a href="{{ url_for('constructors.constructors') }}">Back to Constructors</a>
+{% endblock %}
