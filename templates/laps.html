@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block content %} {% if lap_data %}
+<h2>Lap Information: {{ lap_data[0].race_name }}</h2>
+<p>Date: {{ lap_data[0].date }}</p>
+{% endif %} {% if lap_data %}
+<table border="1">
+  <thead>
+    <tr>
+      <th>Lap Number</th>
+      <th>Position</th>
+      <th>Lap Time</th>
+      <th>Driver</th>
+      <th>Constructor</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for lap in lap_data %}
+    <tr
+      {%
+      if
+      lap.pit_stop_duration
+      %}style="background-color: yellow;"
+      {%
+      endif
+      %}
+    >
+      <td>{{ lap.lap_number }}</td>
+      <td>{{ lap.position }}</td>
+      <td>{{ lap.lap_time }}</td>
+      <td>{{ lap.driver_name }}</td>
+      <td>{{ lap.constructor_name }}</td>
+      <td>
+        {% if lap.pit_stop_duration %} Pit Stop: {{ lap.pit_stop_duration }}
+        seconds {% else %} No Pit Stop {% endif %}
+      </td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>No lap data available for the selected filters.</p>
+{% endif %} {% endblock %}
