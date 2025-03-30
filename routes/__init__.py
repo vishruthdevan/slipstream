@@ -11,6 +11,7 @@ constructor_standings_bp = Blueprint("constructor_standings", __name__)
 qualifying_results_bp = Blueprint("qualifying_results", __name__)
 race_results_bp = Blueprint("race_results", __name__)
 sprint_results_bp = Blueprint("sprint_results", __name__)
+laps_bp = Blueprint("laps", __name__)
 
 
 # Import routes to register them
@@ -19,10 +20,11 @@ from routes import (
     constructor_standings,
     constructors,
     drivers,
+    laps,
     main,
-    races,
-    standings,
     qualifying_results,
-    sprint_results,
     race_results,
+    races,
+    sprint_results,
+    standings,
 )
