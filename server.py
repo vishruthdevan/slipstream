@@ -9,6 +9,7 @@ from routes import (
     constructor_standings_bp,
     constructors_bp,
     drivers_bp,
+    laps_bp,
     main_bp,
     qualifying_results_bp,
     race_results_bp,
@@ -34,6 +35,7 @@ app.register_blueprint(constructor_standings_bp, url_prefix="/constructor-standi
 app.register_blueprint(qualifying_results_bp, url_prefix="/qualifying-results")
 app.register_blueprint(sprint_results_bp, url_prefix="/sprint-results")
 app.register_blueprint(race_results_bp, url_prefix="/race-results")
+app.register_blueprint(laps_bp, url_prefix="/laps")
 
 
 @app.before_request
