@@ -3,27 +3,80 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>F1 Database</title>
+    <title>F1 Dashboard</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+
+    <!-- Custom Styles -->
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/styles.css') }}"
     />
+
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
   </head>
   <body>
-    <header>
-      <h1>F1 Database</h1>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/circuits">Circuits</a>
-        <a href="/races">Races</a>
-        <a href="/constructors">Constructors</a>
-        <a href="/drivers">Drivers</a>
-        <a href="/standings">Standings</a>
-        <a href="/constructor-standings">Results</a>
-      </nav>
+    <header class="bg-dark text-light py-3">
+      <div class="container d-flex justify-content-between align-items-center">
+        <h1 class="m-0">🏎️ F1 Dashboard</h1>
+
+        <!-- Navigation Menu -->
+        <nav class="navbar navbar-expand-lg navbar-dark">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/">🏠 Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/circuits">🛣️ Circuits</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/races">🏁 Races</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/constructors">🏢 Constructors</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/drivers">👨‍✈️ Drivers</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/standings">📊 Standings</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/constructor-standings"
+                  >🏆 Constructor Standings</a
+                >
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
     </header>
-    {% block content %}
-    <!-- Content will be injected here -->
-    {% endblock %}
+
+    <div class="container mt-4">
+      {% block content %}
+      <!-- Page-specific content injected here -->
+      {% endblock %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
