@@ -1,8 +1,104 @@
 {% extends "base.html" %} {% block content %}
-<h2>F1 Drivers</h2>
-<ul>
-  {% for driver in drivers %}
-  <li>{{ driver.name }} - {{ driver.nationality }}</li>
-  {% endfor %}
-</ul>
+<div class="container mt-4">
+  <h2 class="text-center">F1 Drivers</h2>
+
+  <div class="table-responsive" style="border-radius: 10px; overflow: hidden">
+    <table
+      id="driversTable"
+      class="table table-hover table-striped shadow-sm table-dark"
+    >
+      <thead class="table-dark">
+        <tr>
+          <th onclick="sortTable(0)">Name</th>
+          <th onclick="sortTable(1)">Nationality</th>
+          <th onclick="sortTable(2)">Podiums</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for driver in drivers %}
+        <tr
+          onclick="window.location='{{ url_for('drivers.driver_detail', driver_id=driver.id) }}'"
+          style="cursor: pointer"
+        >
+          <td>{{ driver.name }}</td>
+          <td>{{ driver.nationality }}</td>
+          <td>{{ driver.podiums }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  // Function to sort the table based on the column index
+  function sortTable(columnIndex) {
+    var table,
+      rows,
+      switching,
+      i,
+      x,
+      y,
+      shouldSwitch,
+      dir,
+      switchcount = 0;
+    table = document.getElementById("driversTable"); // Get the table by ID
+    switching = true;
+    // Set the sorting direction to ascending:
+    dir = "asc";
+
+    // Keep looping until no switching is needed:
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      // Loop through all table rows (except the first, which contains the headers):
+      for (i = 1; i < rows.length - 1; i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("TD")[columnIndex];
+        y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+        // Check if the two rows should switch:
+        if (dir == "asc") {
+          if (columnIndex === 2) {
+            // For podiums, comparing numeric values
+            if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          } else {
+            // For name and nationality, compare alphabetically
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        } else if (dir == "desc") {
+          if (columnIndex === 2) {
+            // For podiums, comparing numeric values
+            if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          } else {
+            // For name and nationality, compare alphabetically
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+      }
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        switchcount++;
+      } else {
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
+</script>
+
 {% endblock %}
