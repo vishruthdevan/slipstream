@@ -1,22 +1,88 @@
-{% extends "base.html" %} {% block content %}
-<h2>Constructor Standings</h2>
-<table border="1">
-  <thead>
-    <tr>
-      <th>Constructor ID</th>
-      <th>Constructor Name</th>
-      <th>Points</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for standing in standings %}
-    <tr>
-      <td>{{ standing.constructor_id }}</td>
-      <td>{{ standing.name }}</td>
-      <td>{{ standing.points }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-<br />
+{% extends "base.html" %} 
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center text-light">Constructor Standings - {{ selected_year }}</h2>
+
+  <!-- Year Selection -->
+  <div class="text-center mb-3">
+    <label for="year-select" class="text-light">Select Year:</label>
+    <select id="year-select" class="form-select w-auto d-inline" onchange="changeYear()">
+      {% for year in range(2025, 1960, -1) %}
+      <option value="{{ year }}" {% if year == selected_year|int %}selected{% endif %}>
+        {{ year }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+  
+  <!-- Standings Table -->
+  <div class="table-responsive">
+    <table class="table table-hover table-striped table-dark shadow-sm border text-light ">
+      <thead class="table-dark">
+        <tr>
+          <th onclick="sortTable(0)">Rank</th>
+          <th onclick="sortTable(1)">Constructor Name</th>
+          <th onclick="sortTable(2)">Points</th>
+          <th>Drivers & Their Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for standing in standings %}
+        <tr
+          onclick="window.location='{{ url_for('constructors.constructor_detail', constructor_id=standing.constructor_id) }}'"
+          style="cursor: pointer"
+        >
+          <td>{{ standing.rank }}</td>
+          <td>{{ standing.name }}</td>
+          <td>{{ standing.points }}</td>
+          <td>
+            <ul class="list-unstyled">
+              {% for driver in standing.drivers %}
+              <li>{{ driver.name }} - {{ driver.points }} pts</li>
+              {% endfor %}
+            </ul>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Back Button -->
+  <div class="text-center mt-4">
+    <a href="{{ url_for('constructors.constructors') }}" class="btn btn-outline-light">
+      ← Back to Constructors
+    </a>
+  </div>
+</div>
+
+<script>
+  // Change the year and reload the page with the selected year
+  function changeYear() {
+    var selectedYear = document.getElementById("year-select").value;
+    window.location.href = "?year=" + selectedYear;
+  }
+
+  // Function to sort the table by column index
+  function sortTable(columnIndex) {
+    var table = document.querySelector("table");
+    var rows = Array.from(table.rows).slice(1);
+    var isAscending = table.dataset.order !== "desc";
+
+    rows.sort((rowA, rowB) => {
+      var cellA = rowA.cells[columnIndex].innerText.trim();
+      var cellB = rowB.cells[columnIndex].innerText.trim();
+
+      if (!isNaN(cellA) && !isNaN(cellB)) {
+        cellA = parseFloat(cellA);
+        cellB = parseFloat(cellB);
+      }
+
+      return isAscending ? cellA > cellB ? 1 : -1 : cellA < cellB ? 1 : -1;
+    });
+
+    table.tBodies[0].append(...rows);
+    table.dataset.order = isAscending ? "desc" : "asc";
+  }
+</script>
 {% endblock %}
