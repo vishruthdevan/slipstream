@@ -1,36 +1,34 @@
 {% extends "base.html" %} {% block content %}
 <div class="container mt-4">
-  <div class="card shadow-lg">
-    <div class="card-header bg-dark text-white">
-      <h2 class="text-center">
-        {{ constructor.name }}
-        <span class="badge bg-secondary">{{ constructor.nationality }}</span>
-      </h2>
+  <div class="container mt-4">
+    <div class="row text-center">
+      <div class="col-md-4 mb-4">
+        <h2 class="text-center">
+          {{ constructor.name }}
+          <span class="badge bg-secondary">{{ constructor.nationality }}</span>
+        </h2>
+      </div>
     </div>
-    <div class="card-body text-white bg-dark">
-      <div class="row text-center">
-        <div class="col-md-4">
-          <h4>Total Points</h4>
-          <p class="badge bg-primary fs-4">{{ total_points }}</p>
-        </div>
-        <div class="col-md-4">
-          <h4>Championships</h4>
-          <p class="badge bg-success fs-4">{{ total_championships }}</p>
-        </div>
-        <div class="col-md-4">
-          <h4>Podium Finishes</h4>
-          <p class="badge bg-warning text-dark fs-4">{{ podiums }}</p>
-        </div>
+
+    <div class="row text-center">
+      <div class="col-md-4 mb-4">
+        <h4>Total Points</h4>
+        <p class="badge bg-primary fs-4">{{ total_points }}</p>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h4>Championships</h4>
+        <p class="badge bg-success fs-4">{{ total_championships }}</p>
+      </div>
+      <div class="col-md-4 mb-4">
+        <h4>Podium Finishes</h4>
+        <p class="badge bg-warning text-dark fs-4">{{ podiums }}</p>
       </div>
     </div>
   </div>
 
   <h3 class="mt-4 text-center">Drivers</h3>
   <div class="table-responsive" style="border-radius: 10px; overflow: hidden">
-    <table
-      class="table table-hover shadow-sm border border-danger"
-      id="driversTable"
-    >
+    <table class="table table-striped table-dark table-hover" id="driversTable">
       <thead class="table-dark">
         <tr>
           <th onclick="sortTable(0)">Name</th>
@@ -38,7 +36,7 @@
           <th onclick="sortTable(2)">Podiums</th>
         </tr>
       </thead>
-      <tbody class="table-secondary">
+      <tbody>
         {% for driver in drivers %}
         <tr
           onclick="window.location='{{ url_for('drivers.driver_detail', driver_id=driver.id) }}'"
