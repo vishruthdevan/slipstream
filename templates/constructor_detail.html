@@ -1,21 +1,133 @@
 {% extends "base.html" %} {% block content %}
-<h2>Constructor Details</h2>
+<div class="container mt-4">
+  <div class="card shadow-lg">
+    <div class="card-header bg-dark text-white">
+      <h2 class="text-center">
+        {{ constructor.name }}
+        <span class="badge bg-secondary">{{ constructor.nationality }}</span>
+      </h2>
+    </div>
+    <div class="card-body text-white bg-dark">
+      <div class="row text-center">
+        <div class="col-md-4">
+          <h4>Total Points</h4>
+          <p class="badge bg-primary fs-4">{{ total_points }}</p>
+        </div>
+        <div class="col-md-4">
+          <h4>Championships</h4>
+          <p class="badge bg-success fs-4">{{ total_championships }}</p>
+        </div>
+        <div class="col-md-4">
+          <h4>Podium Finishes</h4>
+          <p class="badge bg-warning text-dark fs-4">{{ podiums }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<table border="1">
-  <tr>
-    <th>Name</th>
-    <td>{{ constructor.name }}</td>
-  </tr>
-  <tr>
-    <th>Nationality</th>
-    <td>{{ constructor.nationality }}</td>
-  </tr>
-  <tr>
-    <th>ID</th>
-    <td>{{ constructor.constructorid }}</td>
-  </tr>
-</table>
+  <h3 class="mt-4 text-center">Drivers</h3>
+  <div class="table-responsive" style="border-radius: 10px; overflow: hidden">
+    <table
+      class="table table-hover shadow-sm border border-danger"
+      id="driversTable"
+    >
+      <thead class="table-dark">
+        <tr>
+          <th onclick="sortTable(0)">Name</th>
+          <th onclick="sortTable(1)">Nationality</th>
+          <th onclick="sortTable(2)">Podiums</th>
+        </tr>
+      </thead>
+      <tbody class="table-secondary">
+        {% for driver in drivers %}
+        <tr
+          onclick="window.location='{{ url_for('drivers.driver_detail', driver_id=driver.id) }}'"
+          style="cursor: pointer"
+        >
+          <td>{{ driver.name }}</td>
+          <td>{{ driver.nationality }}</td>
+          <td>{{ driver.podiums }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 
-<br />
-<a href="{{ url_for('constructors.constructors') }}">Back to Constructors</a>
+  <div class="text-center mt-4">
+    <a
+      href="{{ url_for('constructors.constructors') }}"
+      class="btn btn-outline-dark"
+      >← Back to Constructors</a
+    >
+  </div>
+</div>
+
+<script>
+  // Function to sort the table based on the column index
+  function sortTable(columnIndex) {
+    var table,
+      rows,
+      switching,
+      i,
+      x,
+      y,
+      shouldSwitch,
+      dir,
+      switchcount = 0;
+    table = document.getElementById("driversTable");
+    switching = true;
+    // Set the sorting direction to ascending:
+    dir = "asc";
+
+    // Keep looping until no switching is needed:
+    while (switching) {
+      switching = false;
+      rows = table.rows;
+      // Loop through all table rows (except the first, which contains the headers):
+      for (i = 1; i < rows.length - 1; i++) {
+        shouldSwitch = false;
+        x = rows[i].getElementsByTagName("TD")[columnIndex];
+        y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
+        // Check if the two rows should switch:
+        if (dir == "asc") {
+          if (columnIndex === 2) {
+            // For podiums, comparing numeric values
+            if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          } else {
+            // For name and nationality, compare alphabetically
+            if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        } else if (dir == "desc") {
+          if (columnIndex === 2) {
+            if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
+              shouldSwitch = true;
+              break;
+            }
+          } else {
+            if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+              shouldSwitch = true;
+              break;
+            }
+          }
+        }
+      }
+      if (shouldSwitch) {
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+        switching = true;
+        switchcount++;
+      } else {
+        if (switchcount == 0 && dir == "asc") {
+          dir = "desc";
+          switching = true;
+        }
+      }
+    }
+  }
+</script>
 {% endblock %}

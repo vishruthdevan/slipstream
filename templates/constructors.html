@@ -1,8 +1,69 @@
 {% extends "base.html" %} {% block content %}
-<h2>F1 Constructors</h2>
-<ul>
-  {% for constructor in constructors %}
-  <li>{{ constructor.name }} - {{ constructor.nationality }}</li>
-  {% endfor %}
-</ul>
+<div class="container">
+  <h2 class="text-center my-4">🏎️ F1 Constructors</h2>
+
+  <table
+    class="table table-striped table-dark table-hover text-center"
+    id="constructorsTable"
+  >
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">Constructor Name 🔽</th>
+        <th onclick="sortTable(1)">Nationality 🔽</th>
+        <th onclick="sortTable(2)">🏆 Championships 🔽</th>
+        <th onclick="sortTable(3)">🥉 Podiums 🔽</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for constructor in constructors %}
+      <tr
+        onclick="window.location='/constructors/{{ constructor.id }}';"
+        style="cursor: pointer"
+      >
+        <td>{{ constructor.name }}</td>
+        <td>{{ constructor.nationality }}</td>
+        <td>{{ constructor.championships }}</td>
+        <td>{{ constructor.total_podiums }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- JavaScript for Sorting -->
+<script>
+  function sortTable(columnIndex) {
+    let table = document.getElementById("constructorsTable");
+    let tbody = table.getElementsByTagName("tbody")[0];
+    let rows = Array.from(tbody.getElementsByTagName("tr"));
+    let isNumeric = !isNaN(
+      rows[0].getElementsByTagName("td")[columnIndex].textContent.trim()
+    );
+    let ascending = table.getAttribute("data-sort-dir") !== "asc"; // Toggle sorting order
+
+    rows.sort((rowA, rowB) => {
+      let cellA = rowA
+        .getElementsByTagName("td")
+        [columnIndex].textContent.trim();
+      let cellB = rowB
+        .getElementsByTagName("td")
+        [columnIndex].textContent.trim();
+
+      if (isNumeric) {
+        return ascending ? cellA - cellB : cellB - cellA;
+      } else {
+        return ascending
+          ? cellA.localeCompare(cellB)
+          : cellB.localeCompare(cellA);
+      }
+    });
+
+    // Append sorted rows back into tbody
+    tbody.innerHTML = "";
+    rows.forEach((row) => tbody.appendChild(row));
+
+    // Toggle sorting order for next click
+    table.setAttribute("data-sort-dir", ascending ? "asc" : "desc");
+  }
+</script>
 {% endblock %}
