@@ -28,13 +28,22 @@ def circuit_detail(circuit_id):
 @circuits_bp.route("/")
 def circuits():
     """Retrieve and display circuits from the database."""
-    query = text("SELECT circuitid, name, city, country FROM circuit")
+    query = text(
+        "SELECT circuitid, name, city, country, latitude, longitude FROM circuit"
+    )
     cursor = g.conn.execute(query)
 
     circuits_data = []
     for row in cursor:
         circuits_data.append(
-            {"id": row[0], "name": row[1], "location": row[2], "country": row[3]}
+            {
+                "id": row[0],
+                "name": row[1],
+                "city": row[2],
+                "country": row[3],
+                "latitude": row[4],
+                "longitude": row[5],
+            }
         )
     cursor.close()
 

@@ -1,8 +1,85 @@
-{% extends "base.html" %} {% block content %}
-<h2>F1 Circuits</h2>
-<ul>
-  {% for circuit in circuits %}
-  <li>{{ circuit.name }} - {{ circuit.city }}, {{ circuit.country }}</li>
-  {% endfor %}
-</ul>
+{% extends "base.html" %} {% block fullcontent %}
+<h2 class="text-center text-light">F1 Circuits</h2>
+
+<!-- Fullscreen Map Container -->
+<div
+  id="map-container"
+  style="width: 100vw; height: 90vh, margin: 0; padding: 0;"
+>
+  <svg id="world-map" width="100%" height="100%"></svg>
+</div>
+
+<!-- Load D3.js -->
+<script src="https://d3js.org/d3.v6.min.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var width = window.innerWidth, height = window.innerHeight * 0.9;
+
+    // Create an SVG element that covers the whole page
+    var svg = d3.select("#world-map")
+      .attr("width", width)
+      .attr("height", height);
+
+    // Projection focused on Europe
+    var projection = d3.geoMercator()
+      .scale(1000)  // Increased scale to zoom in
+      .center([10, 50])  // Centered roughly around Central Europe
+      .translate([width / 2, height / 2]);
+
+    var path = d3.geoPath().projection(projection);
+
+    // Enable zooming & panning
+    var zoom = d3.zoom()
+      .scaleExtent([1, 8])  // Limits the zoom levels
+      .on("zoom", function (event) {
+        svg.selectAll("path, circle, text").attr("transform", event.transform);
+      });
+
+    svg.call(zoom);
+
+    // Load the world map data
+    d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(function (world) {
+      svg.append("g")
+        .selectAll("path")
+        .data(world.features)
+        .enter()
+        .append("path")
+        .attr("d", path)
+        .attr("fill", "#333")
+        .attr("stroke", "#aaa");
+
+      // Circuit Data from Flask
+      var circuits = {{ circuits | tojson }};
+
+      // Plot circuits
+      svg.selectAll("circle")
+        .data(circuits)
+        .enter()
+        .append("circle")
+        .attr("cx", d => projection([d.longitude, d.latitude])[0])
+        .attr("cy", d => projection([d.longitude, d.latitude])[1])
+        .attr("r", 5)
+        .attr("fill", "red")
+        .attr("stroke", "white")
+        .attr("stroke-width", 1.5)
+        .style("cursor", "pointer")
+        .on("mouseover", function () { d3.select(this).attr("fill", "yellow"); })
+        .on("mouseout", function () { d3.select(this).attr("fill", "red"); })
+        .on("click", function (event, d) { window.location.href = `/circuits/${d.id}/`; });
+
+      // Add labels
+      svg.selectAll("text")
+        .data(circuits)
+        .enter()
+        .append("text")
+        .attr("x", d => projection([d.longitude, d.latitude])[0] + 7)
+        .attr("y", d => projection([d.longitude, d.latitude])[1] + 3)
+        .attr("fill", "white")
+        .attr("font-size", "10px")
+        .attr("font-family", "Arial")
+        .text(d => d.name);
+    });
+  });
+</script>
+
 {% endblock %}
