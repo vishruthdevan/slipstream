@@ -1,8 +1,129 @@
 {% extends "base.html" %} {% block content %}
-<h2>{{ circuit.name }}</h2>
-<p>{{ circuit.city }}, {{ circuit.country }}</p>
-<p>Latitude: {{ circuit.latitude }}</p>
-<p>Longitude: {{ circuit.longitude }}</p>
-<p><a href="{{ circuit.circuiturl }}">More information</a></p>
 
+<div class="container mt-4">
+  <h2 class="text-center">{{ circuit.name }}</h2>
+  <p class="text-center text-white">
+    {{ circuit.city }}, {{ circuit.country }}
+  </p>
+
+  <div class="row">
+    <!-- Circuit Coordinates -->
+    <div class="col-md-6">
+      <h4>Location</h4>
+      <p><strong>Latitude:</strong> {{ circuit.latitude }}</p>
+      <p><strong>Longitude:</strong> {{ circuit.longitude }}</p>
+    </div>
+  </div>
+
+  <hr />
+
+  <!-- Top Constructors -->
+  <h3>Top Constructors at This Circuit</h3>
+  <table
+    class="table table-striped table-hover table-dark"
+    style="border-radius: 10px; overflow: hidden"
+  >
+    <thead>
+      <tr>
+        <th>Constructor</th>
+        <th>Wins</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for constructor in top_constructors %}
+      <tr
+        onclick="window.location='{{ url_for('constructors.constructor_detail', constructor_id=constructor.constructorid) }}'"
+        style="cursor: pointer"
+      >
+        <td>{{ constructor.name }}</td>
+        <td>{{ constructor.wins }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Top Drivers -->
+  <h3>Top Drivers at This Circuit</h3>
+  <table
+    class="table table-striped table-hover table-dark"
+    style="border-radius: 10px; overflow: hidden"
+  >
+    <thead>
+      <tr>
+        <th>Driver</th>
+        <th>Wins</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for driver in top_drivers %}
+      <tr
+        onclick="window.location='{{ url_for('drivers.driver_detail', driver_id=driver.driverid) }}'"
+        style="cursor: pointer"
+      >
+        <td>{{ driver.name }}</td>
+        <td>{{ driver.wins }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- Races at this Circuit -->
+  <h3>Races Held at This Circuit</h3>
+  <div class="table-responsive">
+    <table
+      class="table table-striped table-hover table-dark"
+      id="raceTable"
+      style="border-radius: 10px; overflow: hidden"
+    >
+      <thead class="table-dark">
+        <tr>
+          <th onclick="sortTable(0)">Year</th>
+          <th onclick="sortTable(1)">Race Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for race in races %}
+        <tr
+          onclick="window.location='{{ url_for('races.race_detail', race_id=race.raceid) }}'"
+          style="cursor: pointer"
+        >
+          <td>{{ race.year }}</td>
+          <td>{{ race.name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  function sortTable(columnIndex) {
+    var table = document.getElementById("raceTable");
+    var tbody = table.getElementsByTagName("tbody")[0];
+    var rows = Array.from(tbody.getElementsByTagName("tr"));
+
+    var ascending = table.dataset.sortOrder !== "asc";
+    table.dataset.sortOrder = ascending ? "asc" : "desc";
+
+    rows.sort((rowA, rowB) => {
+      var cellA = rowA.cells[columnIndex].innerText.trim();
+      var cellB = rowB.cells[columnIndex].innerText.trim();
+
+      if (columnIndex === 0) {
+        return ascending ? cellA - cellB : cellB - cellA;
+      } else {
+        return ascending
+          ? cellA.localeCompare(cellB)
+          : cellB.localeCompare(cellA);
+      }
+    });
+
+    // Clear and reinsert sorted rows
+    tbody.innerHTML = "";
+    rows.forEach((row, index) => {
+      row.className = "table-dark"; // Reapply row colors
+      tbody.appendChild(row);
+    });
+  }
+</script>
 {% endblock %}
