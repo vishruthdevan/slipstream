@@ -19,7 +19,12 @@
       </tr>
       <tr>
         <th>Circuit</th>
-        <td>{{ race.circuit_name }} ({{ race.city }}, {{ race.country }})</td>
+        <td>
+          <a href="{{ url_for('circuits.circuit_detail', circuit_id=race.circuitid) }}"
+            class="text-decoration-none text-light">
+            {{ race.circuit_name }} ({{ race.city }}, {{ race.country }})
+          </a>
+        </td>
       </tr>
       <tr>
         <th>Date</th>
