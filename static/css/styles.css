@@ -10,10 +10,6 @@ header {
     border-bottom: 3px solid red;
 }
 
-h1 {
-    font-weight: bold;
-}
-
 /* Navbar */
 nav a {
     text-decoration: none;
@@ -24,11 +20,6 @@ nav a {
 
 nav a:hover {
     color: red;
-}
-
-/* Container */
-.container {
-    max-width: 1200px;
 }
 
 /* Card Styling */
@@ -45,25 +36,14 @@ nav a:hover {
 
 /* Table Styling */
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-    font-size: 1em;
-    text-align: left;
     background-color: #1f1f1f;
     color: #f1f1f1;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-th, td {
-    padding: 12px 15px;
-    border: 1px solid #333;
-}
-
 th {
     background-color: #333;
     color: #f1f1f1;
-    font-weight: bold;
 }
 
 tr:nth-child(even) {
@@ -72,23 +52,4 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: #444;
-}
-
-/* Gold, Silver, Bronze Rows */
-tr.gold {
-    background-color: #ffd700;
-    color: #000;
-    font-weight: bold;
-}
-
-tr.silver {
-    background-color: #c0c0c0;
-    color: #000;
-    font-weight: bold;
-}
-
-tr.bronze {
-    background-color: #cd7f32;
-    color: #000;
-    font-weight: bold;
 }
