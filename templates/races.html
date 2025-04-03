@@ -1,6 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>F1 Races</h2>
+<h2 class="text-center">F1 Races</h2>
+
+<!-- Year Selection -->
+<div class="text-center mb-3">
+  <label for="year-select" class="text-light">Select Year:</label>
+  <select id="year-select" class="form-select w-auto d-inline" onchange="changeYear()">
+    {% for year in range(2025, 1960, -1) %}
+    <option value="{{ year }}" {% if year==selected_year|int %}selected{% endif %}>
+      {{ year }}
+    </option>
+    {% endfor %}
+  </select>
+</div>
+
 <div class="table-responsive">
   <table class="table table-striped table-dark table-hover">
     <thead>
@@ -28,4 +41,12 @@
     </tbody>
   </table>
 </div>
+
+<script>
+  // Change the year and reload the page with the selected year
+  function changeYear() {
+    var selectedYear = document.getElementById("year-select").value;
+    window.location.href = "?year=" + selectedYear;
+  }
+</script>
 {% endblock %}

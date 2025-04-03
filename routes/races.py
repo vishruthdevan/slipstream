@@ -1,4 +1,4 @@
-from flask import g, render_template
+from flask import g, render_template, request
 from sqlalchemy import text
 
 from routes import races_bp
@@ -32,12 +32,19 @@ def race_detail(race_id):
 @races_bp.route("/")
 def races():
     """Retrieve and display races from the database."""
-    query = text("SELECT raceid, name, date FROM race")
-    cursor = g.conn.execute(query)
+    year = request.args.get("year", None)
+
+    if year is None:
+        latest_year_query = text("SELECT MAX(year) FROM race")
+        latest_year = g.conn.execute(latest_year_query).scalar()
+        year = latest_year
+
+    query = text("SELECT raceid, name, year, date FROM race WHERE year = :year")
+    cursor = g.conn.execute(query, {"year": year})
 
     races_data = []
     for row in cursor:
-        races_data.append({"id": row[0], "name": row[1], "date": row[2]})
+        races_data.append({"id": row[0], "name": row[1], "year": row[2], "date": row[3]})
     cursor.close()
 
-    return render_template("races.html", races=races_data)
+    return render_template("races.html", races=races_data, selected_year=year)
