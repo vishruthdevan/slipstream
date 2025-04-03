@@ -12,7 +12,7 @@
     </thead>
     <tbody>
       {% for race in races %}
-      <tr>
+      <tr onclick="window.location='/races/{{ race.id }}';" style="cursor: pointer">
         <td>{{ race.name }}</td>
         <td>{{ race.date }}</td>
         <td>
