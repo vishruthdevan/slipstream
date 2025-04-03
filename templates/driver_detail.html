@@ -1,238 +1,153 @@
 {% extends "base.html" %} {% block content %}
 <div class="container mt-4">
-  <!-- Driver Personal Info -->
-  <div class="card shadow-lg mb-4">
-    <div class="card-header bg-dark text-white">
-      <h3 class="text-center">Driver Profile</h3>
-    </div>
-    <div class="card-body text-white bg-dark">
-      <div class="row">
-        <div class="col-md-6">
-          <h4>Full Name</h4>
-          <p class="text-light">{{ driver.firstname }} {{ driver.lastname }}</p>
-        </div>
-        <div class="col-md-6">
-          <h4>Nationality</h4>
-          <p class="text-light">{{ driver.nationality }}</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6">
-          <h4>Driver Number</h4>
-          <p class="text-light">{{ driver.number }}</p>
-        </div>
-      </div>
-    </div>
+  <h2 class="text-center text-white">Driver Profile</h2>
+
+  <div class="card-body bg-dark text-white p-4 mb-4 rounded">
+    <h4>Full Name</h4>
+    <p class="text-light">{{ driver.firstname }} {{ driver.lastname }}</p>
+    <h4>Nationality</h4>
+    <p class="text-light">{{ driver.nationality }}</p>
+    <h4>Driver Number</h4>
+    <p class="text-light">{{ driver.number }}</p>
   </div>
 
-  <!-- Driver Stats -->
-  <div class="row">
+  <div class="row text-white">
     <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-header bg-primary text-white">
-          <h5 class="text-center">Podiums</h5>
-        </div>
-        <div class="card-body text-center">
-          <p class="fs-4 text-light">{{ race_results.podiums }} Podiums</p>
-        </div>
+      <div class="card-body bg-primary p-3 rounded text-center">
+        <h5>Podiums</h5>
+        <p class="fs-4">{{ race_results.podiums }} Podiums</p>
       </div>
     </div>
-
     <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-header bg-success text-white">
-          <h5 class="text-center">Wins</h5>
-        </div>
-        <div class="card-body text-center">
-          <p class="fs-4 text-light">{{ wins.wins }} Wins</p>
-        </div>
+      <div class="card-body bg-success p-3 rounded text-center">
+        <h5>Wins</h5>
+        <p class="fs-4">{{ wins.wins }} Wins</p>
       </div>
     </div>
-
     <div class="col-md-4">
-      <div class="card shadow-sm">
-        <div class="card-header bg-warning text-dark">
-          <h5 class="text-center">Total Points</h5>
-        </div>
-        <div class="card-body text-center">
-          <p class="fs-4 text-light">{{ race_results.total_points }} Points</p>
-        </div>
+      <div class="card-body bg-warning p-3 rounded text-dark text-center">
+        <h5>Total Points</h5>
+        <p class="fs-4">{{ race_results.total_points }} Points</p>
       </div>
     </div>
   </div>
 
-  <!-- Driver's Laps -->
-  <div class="card shadow-lg mt-4">
-    <div class="card-header bg-dark text-white">
-      <h5 class="text-center">Total Laps Driven</h5>
-    </div>
-    <div class="card-body text-center">
-      <p class="fs-4 text-light">{{ laps_data.total_laps }} Laps</p>
-    </div>
+  <div class="card-body bg-dark text-white p-4 mt-4 rounded text-center">
+    <h5>Total Laps Driven</h5>
+    <p class="fs-5">{{ laps_data.total_laps }} Laps</p>
   </div>
 
-  <!-- Best Performance (Highest finish and race with max points) -->
-  <div class="card shadow-lg mt-4">
-    <div class="card-header bg-dark text-white">
-      <h5 class="text-center">Best Performance</h5>
-    </div>
-    <div class="card-body text-center">
-      <p class="fs-4 text-light">
-        Best Position: {{ best_performance.best_position }}
-      </p>
-      <p class="fs-4 text-light">Race: {{ best_performance.best_race }}</p>
-      <p class="fs-4 text-light">Points: {{ best_performance.best_points }}</p>
-    </div>
+  <div class="card-body bg-dark text-white p-4 mt-4 rounded text-center">
+    <h5>Best Performance</h5>
+    <p></p>
+    <p class="fs-5">Best Position: {{ best_performance.best_position }}</p>
+    <p class="fs-5">Race: {{ best_performance.best_race }}</p>
+    <p class="fs-5">Points: {{ best_performance.best_points }}</p>
   </div>
 
-  <!-- Race Results Table -->
-  <div class="card shadow-lg mt-4">
-    <div class="card-header bg-dark text-white">
-      <h5 class="text-center">Race Results</h5>
-    </div>
-    <div class="card-body">
-      <table class="table table-bordered text-light">
-        <thead>
-          <tr>
-            <th>Race Name</th>
-            <th>Year</th>
-            <th>Position</th>
-            <th>Points</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for result in race_results_data %}
-          <tr>
-            <td>{{ result.race_name }}</td>
-            <td>{{ result.year }}</td>
-            <td>{{ result.position }}</td>
-            <td>{{ result.points }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+  <h5 class="text-center text-white mt-4">Race Results</h5>
+  <div class="card-body bg-dark text-white p-4 rounded">
+    <table class="table table-dark text-light table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Race Name</th>
+          <th>Year</th>
+          <th>Position</th>
+          <th>Points</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for result in race_results_data %}
+        <tr>
+          <td>{{ result.race_name }}</td>
+          <td>{{ result.year }}</td>
+          <td>{{ result.position }}</td>
+          <td>{{ result.points }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 
-  <!-- Position Distribution Chart (D3.js) -->
-  <div class="card shadow-lg mt-4">
-    <div class="card-header bg-dark text-white">
-      <h5 class="text-center">Position Distribution</h5>
-    </div>
-    <div class="card-body">
-      <div id="position-distribution"></div>
-    </div>
+  <h5 class="text-center text-white mt-4">Position Distribution</h5>
+  <div class="card-body bg-dark text-white p-4 rounded">
+    <div id="position-distribution"></div>
   </div>
 
-  <!-- Back Button -->
   <div class="text-center mt-4">
-    <a href="{{ url_for('drivers.drivers') }}" class="btn btn-outline-light">
-      ← Back to Drivers
-    </a>
+    <a href="{{ url_for('drivers.drivers') }}" class="btn btn-outline-light"
+      >← Back to Drivers</a
+    >
   </div>
 </div>
 
-<!-- D3.js Script for Position Distribution -->
 <script>
   var data = {{ position_distribution | tojson }};
-
   d3.select("#position-distribution").html("");
 
-  const margin = {top: 40, right: 30, bottom: 60, left: 60};
+  const margin = { top: 40, right: 30, bottom: 60, left: 60 };
   const width = 600 - margin.left - margin.right;
   const height = 400 - margin.top - margin.bottom;
 
-  // Create SVG
-  const svg = d3.select("#position-distribution").append("svg")
+  const svg = d3.select("#position-distribution")
+    .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Set up scales
   const x = d3.scaleBand()
     .domain(data.map(d => d.position))
     .range([0, width])
     .padding(0.2);
 
   const y = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.position_count) * 1.1]) // Add 10% padding at the top
+    .domain([0, d3.max(data, d => d.position_count) * 1.1])
     .nice()
     .range([height, 0]);
 
-  // Add X axis with straight labels
   svg.append("g")
     .attr("transform", `translate(0,${height})`)
     .call(d3.axisBottom(x))
     .selectAll("text")
     .style("text-anchor", "middle")
     .style("font-size", "12px")
-    .style("fill", "#E0E0E0");  // Light gray text for dark background
+    .style("fill", "#E0E0E0");
 
-  // Style the axis lines and ticks for dark background
-  svg.selectAll(".domain, .tick line")
-    .style("stroke", "#E0E0E0");
-
-  // Add Y axis
   svg.append("g")
     .call(d3.axisLeft(y))
     .selectAll("text")
-    .style("fill", "#E0E0E0")  // Light gray text for dark background
+    .style("fill", "#E0E0E0")
     .style("font-size", "12px");
 
-  // Add bars with a brighter color for dark background
   svg.selectAll(".bar")
     .data(data)
     .enter()
     .append("rect")
-    .attr("class", "bar")
     .attr("x", d => x(d.position))
     .attr("y", d => y(d.position_count))
     .attr("width", x.bandwidth())
     .attr("height", d => height - y(d.position_count))
-    .attr("fill", "#5CDF70");  // Brighter green for dark background
+    .attr("fill", "#5CDF70");
 
-  // Add bar labels
   svg.selectAll(".bar-label")
     .data(data)
     .enter()
     .append("text")
-    .attr("class", "bar-label")
     .attr("x", d => x(d.position) + x.bandwidth() / 2)
     .attr("y", d => y(d.position_count) - 5)
     .attr("text-anchor", "middle")
     .text(d => d.position_count)
     .style("font-size", "12px")
-    .style("fill", "#FFFFFF");  // White text for visibility
+    .style("fill", "#FFFFFF");
 
-  // Add chart title
   svg.append("text")
     .attr("x", width / 2)
     .attr("y", -15)
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .style("font-weight", "bold")
-    .style("fill", "#FFFFFF")  // White text for dark background
+    .style("fill", "#FFFFFF")
     .text("Position Distribution");
-
-  // Add X axis label
-  svg.append("text")
-    .attr("x", width / 2)
-    .attr("y", height + margin.bottom - 20)
-    .attr("text-anchor", "middle")
-    .style("font-size", "14px")
-    .style("fill", "#FFFFFF")  // White text for dark background
-    .text("Position");
-
-  // Add Y axis label
-  svg.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("x", -(height / 2))
-    .attr("y", -margin.left + 15)
-    .attr("text-anchor", "middle")
-    .style("font-size", "14px")
-    .style("fill", "#FFFFFF")  // White text for dark background
-    .text("Count");
 </script>
-
 {% endblock %}
