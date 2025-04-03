@@ -1,9 +1,11 @@
-{% extends "base.html" %}
-{% block content %}
+{% extends "base.html" %} {% block content %}
 <div class="container mt-4">
   <h2 class="text-center mb-4">Race Details</h2>
 
-  <table class="table table-dark table-striped table-bordered">
+  <table
+    class="table table-dark table-striped table-bordered"
+    style="border-radius: 10px; overflow: hidden"
+  >
     <tbody>
       <tr>
         <th>Race Name</th>
@@ -20,8 +22,10 @@
       <tr>
         <th>Circuit</th>
         <td>
-          <a href="{{ url_for('circuits.circuit_detail', circuit_id=race.circuitid) }}"
-            class="text-decoration-none text-light">
+          <a
+            href="{{ url_for('circuits.circuit_detail', circuit_id=race.circuitid) }}"
+            class="text-decoration-none text-light"
+          >
             {{ race.circuit_name }} ({{ race.city }}, {{ race.country }})
           </a>
         </td>
@@ -44,25 +48,41 @@
   {% if race.qualifying_date %}
   <h3 class="mt-4">Sessions</h3>
   <ul class="list-group">
-    <li class="list-group-item">FP1: {{ race.fp1_date }} - {{ race.fp1_time or "N/A" }}</li>
-    <li class="list-group-item">FP2: {{ race.fp2_date }} - {{ race.fp2_time or "N/A" }}</li>
-    <li class="list-group-item">FP3: {{ race.fp3_date }} - {{ race.fp3_time or "N/A" }}</li>
-    <li class="list-group-item">
-      Qualifying: {{ race.qualifying_date }} - {{ race.qualifying_time or "N/A" }}
+    <li class="list-group-item list-group-item-dark">
+      FP1: {{ race.fp1_date }} - {{ race.fp1_time or "N/A" }}
     </li>
-    <li class="list-group-item">
+    <li class="list-group-item list-group-item-dark">
+      FP2: {{ race.fp2_date }} - {{ race.fp2_time or "N/A" }}
+    </li>
+    <li class="list-group-item list-group-item-dark">
+      FP3: {{ race.fp3_date }} - {{ race.fp3_time or "N/A" }}
+    </li>
+    <li class="list-group-item list-group-item-dark">
+      Qualifying: {{ race.qualifying_date }} - {{ race.qualifying_time or "N/A"
+      }}
+    </li>
+    <li class="list-group-item list-group-item-dark">
       Sprint: {{ race.sprint_date or "N/A" }} - {{ race.sprint_time or "N/A" }}
     </li>
   </ul>
   {% endif %}
 
   <div class="mt-4">
-    <a href="{{ url_for('race_results.race_results', race_id=race.raceid) }}" class="btn btn-primary btn-sm">Race
-      Results</a>
-    <a href="{{ url_for('qualifying_results.qualifying_results', race_id=race.raceid) }}"
-      class="btn btn-secondary btn-sm">Qualifying Results</a>
-    <a href="{{ url_for('sprint_results.sprint_results', race_id=race.raceid) }}" class="btn btn-success btn-sm">Sprint
-      Results</a>
+    <a
+      href="{{ url_for('race_results.race_results', race_id=race.raceid) }}"
+      class="btn btn-primary btn-sm"
+      >Race Results</a
+    >
+    <a
+      href="{{ url_for('qualifying_results.qualifying_results', race_id=race.raceid) }}"
+      class="btn btn-secondary btn-sm"
+      >Qualifying Results</a
+    >
+    <a
+      href="{{ url_for('sprint_results.sprint_results', race_id=race.raceid) }}"
+      class="btn btn-success btn-sm"
+      >Sprint Results</a
+    >
   </div>
 </div>
 {% endblock %}
