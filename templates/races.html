@@ -1,8 +1,31 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 <h2>F1 Races</h2>
-<ul>
-  {% for race in races %}
-  <li>{{ race.name }} - {{ race.date }}</li>
-  {% endfor %}
-</ul>
+<div class="table-responsive">
+  <table class="table table-striped table-dark table-hover">
+    <thead>
+      <tr>
+        <th>Race Name</th>
+        <th>Date</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for race in races %}
+      <tr>
+        <td>{{ race.name }}</td>
+        <td>{{ race.date }}</td>
+        <td>
+          <a href="{{ url_for('race_results.race_results', race_id=race.id) }}" class="btn btn-primary btn-sm">Race
+            Results</a>
+          <a href="{{ url_for('qualifying_results.qualifying_results', race_id=race.id) }}"
+            class="btn btn-secondary btn-sm">Qualifying Results</a>
+          <a href="{{ url_for('sprint_results.sprint_results', race_id=race.id) }}"
+            class="btn btn-success btn-sm">Sprint Results</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}
