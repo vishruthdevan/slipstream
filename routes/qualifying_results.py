@@ -10,8 +10,8 @@ def qualifying_results(race_id):
     query = text(
         """
         SELECT q.position, q.q1, q.q2, q.q3, 
-               d.firstname, d.lastname, 
-               c.name AS constructor_name, 
+               d.driverid, d.firstname, d.lastname, 
+               c.constructorid, c.name AS constructor_name, 
                r.name AS race_name, r.date
         FROM qualifyingresults q
         JOIN race r ON q.raceid = r.raceid AND r.raceid = :race_id
@@ -31,11 +31,13 @@ def qualifying_results(race_id):
                 "q1": row[1],
                 "q2": row[2],
                 "q3": row[3],
-                "first_name": row[4],
-                "last_name": row[5],
-                "constructor_name": row[6],
-                "race_name": row[7],
-                "date": row[8],
+                "driver_id": row[4],
+                "first_name": row[5],
+                "last_name": row[6],
+                "constructor_id": row[7],
+                "constructor_name": row[8],
+                "race_name": row[9],
+                "date": row[10],
             }
         )
     cursor.close()

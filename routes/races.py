@@ -9,7 +9,7 @@ def race_detail(race_id):
     """Retrieve and display details for a specific race."""
     query = text(
         """
-        SELECT r.raceid, r.name, r.year, r.round, r.date, r.time, r.weather,
+        SELECT r.raceid, r.name, r.year, r.round, r.date, r.time, r.weather, r.circuitid,
                c.name AS circuit_name, c.city, c.country,
                r.fp1_date, r.fp1_time, r.fp2_date, r.fp2_time,
                r.fp3_date, r.fp3_time, r.qualifying_date, r.qualifying_time,

@@ -19,8 +19,17 @@
       {% for result in qualifying_results %}
       <tr>
         <td>{{ result.position }}</td>
-        <td>{{ result.first_name }} {{ result.last_name }}</td>
-        <td>{{ result.constructor_name }}</td>
+        <td>
+          <a href="{{ url_for('drivers.driver_detail', driver_id=result.driver_id) }}" class="text-light">
+            {{ result.first_name }} {{ result.last_name }}
+          </a>
+        </td>
+        <td>
+          <a href="{{ url_for('constructors.constructor_detail', constructor_id=result.constructor_id) }}"
+            class="text-light">
+            {{ result.constructor_name }}
+          </a>
+        </td>
         <td>{{ result.q1 }}</td>
         <td>{{ result.q2 }}</td>
         <td>{{ result.q3 }}</td>
