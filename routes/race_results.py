@@ -9,7 +9,7 @@ def race_results(race_id):
     """Retrieve and display details for a specific race."""
     query = text(
         """
-        SELECT rr.position, rr.points, d.firstname, d.lastname, c.name as constructor_name, r.name AS race_name, r.date
+        SELECT rr.position, rr.points, d.firstname, d.lastname, c.constructorid, c.name as constructor_name, r.name AS race_name, r.date
         FROM raceresults rr
         JOIN race r ON rr.raceid = r.raceid AND r.raceid = :race_id
         JOIN driver d ON rr.driverid = d.driverid
@@ -28,9 +28,10 @@ def race_results(race_id):
                 "points": row[1],
                 "first_name": row[2],
                 "last_name": row[3],
-                "constructor_name": row[4],
-                "race_name": row[5],
-                "date": row[6],
+                "constructor_id": row[4],
+                "constructor_name": row[5],
+                "race_name": row[6],
+                "date": row[7],
             }
         )
     cursor.close()

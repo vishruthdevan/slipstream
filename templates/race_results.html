@@ -1,8 +1,9 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% block content %}
 <h2>Race Results: {{ race_results[0].race_name }}</h2>
 <p>Date: {{ race_results[0].date }}</p>
 
-<table border="1">
+<table>
   <thead>
     <tr>
       <th>Position</th>
@@ -13,10 +14,12 @@
   </thead>
   <tbody>
     {% for result in race_results %}
-    <tr>
+    <tr
+      class="{% if result.position == 1 %}gold{% elif result.position == 2 %}silver{% elif result.position == 3 %}bronze{% endif %}">
       <td>{{ result.position }}</td>
       <td>{{ result.first_name }} {{ result.last_name }}</td>
-      <td>{{ result.constructor_name }}</td>
+      <td onclick="window.location='/constructors/{{ result.constructor_id }}';" style="cursor: pointer">{{
+        result.constructor_name }}</td>
       <td>{{ result.points }}</td>
     </tr>
     {% endfor %}
