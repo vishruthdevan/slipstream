@@ -17,7 +17,8 @@
     <tr
       class="{% if result.position == 1 %}gold{% elif result.position == 2 %}silver{% elif result.position == 3 %}bronze{% endif %}">
       <td>{{ result.position }}</td>
-      <td>{{ result.first_name }} {{ result.last_name }}</td>
+      <td onclick="window.location='/drivers/{{ result.driver_id }}';" style="cursor: pointer">{{
+        result.first_name }} {{ result.last_name }}</td>
       <td onclick="window.location='/constructors/{{ result.constructor_id }}';" style="cursor: pointer">{{
         result.constructor_name }}</td>
       <td>{{ result.points }}</td>
