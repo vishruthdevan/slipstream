@@ -92,8 +92,8 @@ CREATE TABLE RaceResults (
     RaceID INT NOT NULL REFERENCES Race(RaceID) ON DELETE CASCADE,
     DriverID INT NOT NULL REFERENCES Driver(DriverID) ON DELETE CASCADE,
     ConstructorID INT NOT NULL REFERENCES Constructor(ConstructorID) ON DELETE CASCADE,
-    Position INT NOT NULL CHECK (Position BETWEEN 1 AND 20),
-    Grid INT NOT NULL CHECK (Grid BETWEEN 1 AND 20),
+    Position INT CHECK (Position BETWEEN 1 AND 20),
+    Grid INT NOT NULL CHECK (Grid BETWEEN 0 AND 20),
     Points INT NOT NULL CHECK (Points >= 0),
     PRIMARY KEY (RaceID, DriverID, ConstructorID)
 );
