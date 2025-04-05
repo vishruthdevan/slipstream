@@ -72,57 +72,71 @@
       shouldSwitch,
       dir,
       switchcount = 0;
+
+    // Get the table by ID (assuming the table ID is "driversTable")
     table = document.getElementById("driversTable");
+
+    // Initialize switching to true so the loop starts
     switching = true;
-    // Set the sorting direction to ascending:
+
+    // Set the sorting direction to ascending by default
     dir = "asc";
 
-    // Keep looping until no switching is needed:
+    // Continue looping until no switching is needed (i.e., the table is sorted)
     while (switching) {
       switching = false;
-      rows = table.rows;
-      // Loop through all table rows (except the first, which contains the headers):
+      rows = table.rows; // Get all the rows of the table (including the header row)
+
+      // Loop through all table rows (except the first, which contains the headers)
       for (i = 1; i < rows.length - 1; i++) {
         shouldSwitch = false;
+
+        // Get the two elements (cells) that need to be compared based on the clicked column index
         x = rows[i].getElementsByTagName("TD")[columnIndex];
         y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
-        // Check if the two rows should switch:
+
+        // Compare the two rows depending on the current sort direction (ascending or descending)
         if (dir == "asc") {
           if (columnIndex === 2) {
-            // For podiums, comparing numeric values
+            // If sorting by podiums (assumed to be in column 2), compare numerically
             if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
-              shouldSwitch = true;
-              break;
+              shouldSwitch = true; // Mark that the rows should be switched
+              break; // Exit the loop as switching is required
             }
           } else {
-            // For name and nationality, compare alphabetically
+            // For name or nationality columns (non-numeric), compare alphabetically
             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-              shouldSwitch = true;
-              break;
+              shouldSwitch = true; // Mark that the rows should be switched
+              break; // Exit the loop as switching is required
             }
           }
         } else if (dir == "desc") {
           if (columnIndex === 2) {
+            // If sorting by podiums (numeric column), compare in reverse order (descending)
             if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
-              shouldSwitch = true;
-              break;
+              shouldSwitch = true; // Mark that the rows should be switched
+              break; // Exit the loop as switching is required
             }
           } else {
+            // For name or nationality columns (non-numeric), compare alphabetically in reverse order
             if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-              shouldSwitch = true;
-              break;
+              shouldSwitch = true; // Mark that the rows should be switched
+              break; // Exit the loop as switching is required
             }
           }
         }
       }
+
+      // If a switch is needed, perform the switch and restart the loop to check again
       if (shouldSwitch) {
-        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-        switching = true;
-        switchcount++;
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]); // Move the row in the DOM
+        switching = true; // Set switching to true to continue looping
+        switchcount++; // Increment the switch count
       } else {
+        // If no switching was done and we're in ascending order, change to descending order and restart
         if (switchcount == 0 && dir == "asc") {
-          dir = "desc";
-          switching = true;
+          dir = "desc"; // Change direction to descending
+          switching = true; // Restart the loop to check in descending order
         }
       }
     }

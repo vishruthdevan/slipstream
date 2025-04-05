@@ -82,72 +82,84 @@
 </div>
 
 <script>
+  // Parse the data passed from Flask to JavaScript using tojson
   var data = {{ position_distribution | tojson }};
+
+  // Clear any existing content inside the div with the ID "position-distribution"
   d3.select("#position-distribution").html("");
 
+  // Define the margins, width, and height for the SVG container
   const margin = { top: 40, right: 30, bottom: 60, left: 60 };
-  const width = 600 - margin.left - margin.right;
-  const height = 400 - margin.top - margin.bottom;
+  const width = 600 - margin.left - margin.right;  // Width of the chart area
+  const height = 400 - margin.top - margin.bottom; // Height of the chart area
 
+  // Create the SVG element and set up the transform for margins
   const svg = d3.select("#position-distribution")
     .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("width", width + margin.left + margin.right)  // Total width including margins
+    .attr("height", height + margin.top + margin.bottom) // Total height including margins
     .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+    .attr("transform", `translate(${margin.left},${margin.top})`); // Translate to apply margins
 
+  // Create the x-axis scale, which is a band scale for categorical data (positions)
   const x = d3.scaleBand()
-    .domain(data.map(d => d.position))
-    .range([0, width])
-    .padding(0.2);
+    .domain(data.map(d => d.position))  // Use the 'position' field as the categories
+    .range([0, width])                  // Define the range of the scale
+    .padding(0.2);                      // Set padding between bars
 
+  // Create the y-axis scale, which is a linear scale for the frequency (position_count)
   const y = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.position_count) * 1.1])
-    .nice()
-    .range([height, 0]);
+    .domain([0, d3.max(data, d => d.position_count) * 1.1])  // Set y-axis domain based on max count, with 10% padding
+    .nice()  // Ensures the domain is rounded to nice values
+    .range([height, 0]);  // Invert the scale to position bars from bottom to top
 
+  // Add the x-axis to the SVG, and position it at the bottom of the chart
   svg.append("g")
-    .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .style("text-anchor", "middle")
-    .style("font-size", "12px")
-    .style("fill", "#E0E0E0");
+    .attr("transform", `translate(0,${height})`)  // Move the axis to the bottom
+    .call(d3.axisBottom(x))  // Call the axisBottom function to draw the axis
+    .selectAll("text")  // Select all the tick labels on the x-axis
+    .style("text-anchor", "middle")  // Center the text labels
+    .style("font-size", "12px")  // Set font size
+    .style("fill", "#E0E0E0");  // Set text color to light gray
 
+  // Add the y-axis to the SVG
   svg.append("g")
-    .call(d3.axisLeft(y))
-    .selectAll("text")
-    .style("fill", "#E0E0E0")
-    .style("font-size", "12px");
+    .call(d3.axisLeft(y))  // Call the axisLeft function to draw the axis
+    .selectAll("text")  // Select all the tick labels on the y-axis
+    .style("fill", "#E0E0E0")  // Set text color to light gray
+    .style("font-size", "12px");  // Set font size
 
+  // Create the bars for the bar chart using rectangles ('rect')
   svg.selectAll(".bar")
-    .data(data)
+    .data(data)  // Bind the data to the bars
     .enter()
     .append("rect")
-    .attr("x", d => x(d.position))
-    .attr("y", d => y(d.position_count))
-    .attr("width", x.bandwidth())
-    .attr("height", d => height - y(d.position_count))
-    .attr("fill", "#5CDF70");
+    .attr("x", d => x(d.position))  // Set the x position based on the position (category)
+    .attr("y", d => y(d.position_count))  // Set the y position based on the count (height of the bar)
+    .attr("width", x.bandwidth())  // Set the width of the bars based on the x scale
+    .attr("height", d => height - y(d.position_count))  // Set the height of the bars
+    .attr("fill", "#5CDF70");  // Set the color of the bars to a green shade
 
+  // Add labels on top of each bar to show the position count
   svg.selectAll(".bar-label")
-    .data(data)
+    .data(data)  // Bind the data to the labels
     .enter()
     .append("text")
-    .attr("x", d => x(d.position) + x.bandwidth() / 2)
-    .attr("y", d => y(d.position_count) - 5)
-    .attr("text-anchor", "middle")
-    .text(d => d.position_count)
-    .style("font-size", "12px")
-    .style("fill", "#FFFFFF");
+    .attr("x", d => x(d.position) + x.bandwidth() / 2)  // Position the label in the center of each bar
+    .attr("y", d => y(d.position_count) - 5)  // Position the label just above the bar
+    .attr("text-anchor", "middle")  // Center the text horizontally
+    .text(d => d.position_count)  // Display the position count as the label text
+    .style("font-size", "12px")  // Set the font size of the labels
+    .style("fill", "#FFFFFF");  // Set the label color to white for contrast
 
+  // Add a title to the chart at the top
   svg.append("text")
-    .attr("x", width / 2)
-    .attr("y", -15)
-    .attr("text-anchor", "middle")
-    .style("font-size", "16px")
-    .style("font-weight", "bold")
-    .style("fill", "#FFFFFF")
-    .text("Position Distribution");
+    .attr("x", width / 2)  // Position the title at the center of the chart
+    .attr("y", -15)  // Position the title just above the chart
+    .attr("text-anchor", "middle")  // Center the text horizontally
+    .style("font-size", "16px")  // Set the font size of the title
+    .style("font-weight", "bold")  // Make the title bold
+    .style("fill", "#FFFFFF")  // Set the title color to white
+    .text("Position Distribution");  // Set the title text
 </script>
 {% endblock %}

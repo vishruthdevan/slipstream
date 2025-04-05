@@ -33,16 +33,26 @@
 
 <!-- JavaScript for Sorting -->
 <script>
+  // Function to sort the table based on the column index (ascending or descending)
   function sortTable(columnIndex) {
+    // Get the table by ID and the tbody element that contains the rows
     let table = document.getElementById("constructorsTable");
     let tbody = table.getElementsByTagName("tbody")[0];
+
+    // Convert the table rows into an array for easy sorting
     let rows = Array.from(tbody.getElementsByTagName("tr"));
+
+    // Check if the column contains numeric values by testing the first row's cell content
     let isNumeric = !isNaN(
       rows[0].getElementsByTagName("td")[columnIndex].textContent.trim()
     );
+
+    // Get the current sorting order (ascending or descending)
     let ascending = table.getAttribute("data-sort-dir") !== "asc"; // Toggle sorting order
 
+    // Sort the rows based on the content of the selected column
     rows.sort((rowA, rowB) => {
+      // Extract the text content of the cells in the selected column for each row
       let cellA = rowA
         .getElementsByTagName("td")
         [columnIndex].textContent.trim();
@@ -50,21 +60,24 @@
         .getElementsByTagName("td")
         [columnIndex].textContent.trim();
 
+      // If the column contains numeric data, sort numerically
       if (isNumeric) {
         return ascending ? cellA - cellB : cellB - cellA;
       } else {
+        // Otherwise, sort alphabetically (for text-based columns)
         return ascending
-          ? cellA.localeCompare(cellB)
-          : cellB.localeCompare(cellA);
+          ? cellA.localeCompare(cellB) // Compare text for ascending order
+          : cellB.localeCompare(cellA); // Compare text for descending order
       }
     });
 
-    // Append sorted rows back into tbody
+    // Clear the current rows in the tbody and reinsert the sorted rows
     tbody.innerHTML = "";
-    rows.forEach((row) => tbody.appendChild(row));
+    rows.forEach((row) => tbody.appendChild(row)); // Append each sorted row back to the tbody
 
-    // Toggle sorting order for next click
+    // Toggle the sorting direction for the next sort (ascending <-> descending)
     table.setAttribute("data-sort-dir", ascending ? "asc" : "desc");
   }
 </script>
+
 {% endblock %}

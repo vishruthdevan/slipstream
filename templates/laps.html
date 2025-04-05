@@ -82,54 +82,54 @@
 {% endif %}
 
 <script>
-  // Function to parse lap time (e.g. "1:23.456" -> total seconds as float)
+  // Function to parse lap time in the format "1:23.456" into total seconds as a float
   function parseLapTime(timeStr) {
-    const parts = timeStr.split(":");
+    const parts = timeStr.split(":"); // Split the time string into components (hours, minutes, seconds)
     if (parts.length === 3) {
-      let hours = parseInt(parts[0], 10);
-      let minutes = parseInt(parts[0], 10);
-      let seconds = parseFloat(parts[1]);
-      return minutes * 60 + seconds; // Convert to total seconds
+      let hours = parseInt(parts[0], 10); // Extract hours as an integer
+      let minutes = parseInt(parts[1], 10); // Extract minutes as an integer
+      let seconds = parseFloat(parts[2]); // Extract seconds as a float
+      return minutes * 60 + seconds + hours * 3600; // Convert the entire time into total seconds
     }
-    return parseFloat(timeStr) || 0; // Handle cases like just seconds
+    return parseFloat(timeStr) || 0; // Handle cases like "45" (just seconds), return as float, or return 0 if invalid
   }
 
-  // Function to sort the table based on column clicked
+  // Function to sort the table based on the column clicked by the user
   function sortTable(columnIndex) {
-    let table = document.getElementById("lapTable");
-    let rows = Array.from(table.rows).slice(1); // Get all rows excluding the header
-    let isAscending = table.dataset.sortOrder === "asc";  // Determine if we are sorting in ascending order
+    let table = document.getElementById("lapTable"); // Get the table element by its ID
+    let rows = Array.from(table.rows).slice(1); // Get all table rows excluding the header (index 0)
+    let isAscending = table.dataset.sortOrder === "asc"; // Check the current sort direction (ascending or descending)
 
+    // Sort the rows based on the content of the clicked column
     rows.sort((rowA, rowB) => {
-      let cellA = rowA.cells[columnIndex].innerText.trim();
-      let cellB = rowB.cells[columnIndex].innerText.trim();
+      let cellA = rowA.cells[columnIndex].innerText.trim(); // Get the text content of the current row's cell
+      let cellB = rowB.cells[columnIndex].innerText.trim(); // Get the text content of the next row's cell
 
-      // Special case for lap time (column 2, index 2)
+      // Special case for lap time column (index 2) - parse the time and compare
       if (columnIndex === 2) {
         return isAscending 
-          ? parseLapTime(cellA) - parseLapTime(cellB) 
-          : parseLapTime(cellB) - parseLapTime(cellA);
+          ? parseLapTime(cellA) - parseLapTime(cellB) // Sort in ascending order based on lap time
+          : parseLapTime(cellB) - parseLapTime(cellA); // Sort in descending order based on lap time
       }
 
-      // Convert numbers (if possible) for sorting
+      // For numeric columns: Convert cell content to numbers for proper sorting
       let numA = parseFloat(cellA);
       let numB = parseFloat(cellB);
 
+      // If both values are numeric, compare them
       if (!isNaN(numA) && !isNaN(numB)) {
-        return isAscending ? numA - numB : numB - numA;
+        return isAscending ? numA - numB : numB - numA; // Sort numbers based on the direction
       } else {
+        // If the values are not numeric, sort them alphabetically (case-sensitive)
         return isAscending ? cellA.localeCompare(cellB) : cellB.localeCompare(cellA);
       }
     });
 
-    // Re-attach the sorted rows to the table
+    // Re-attach the sorted rows back to the table body to update the table display
     rows.forEach(row => table.tBodies[0].appendChild(row));
 
-    // Toggle the sort order (asc <-> desc)
+    // Toggle the sort order for the next click (ascending becomes descending, and vice versa)
     table.dataset.sortOrder = isAscending ? "desc" : "asc";
   }
 </script>
-
-
-
 {% endblock %}

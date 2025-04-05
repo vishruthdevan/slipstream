@@ -97,33 +97,40 @@
 </div>
 
 <script>
+  // This function sorts the table based on the column clicked.
+  // It takes the column index as an argument and sorts the rows accordingly.
   function sortTable(columnIndex) {
     var table = document.getElementById("raceTable");
     var tbody = table.getElementsByTagName("tbody")[0];
     var rows = Array.from(tbody.getElementsByTagName("tr"));
 
+    // Determine the current sorting order (ascending or descending)
     var ascending = table.dataset.sortOrder !== "asc";
     table.dataset.sortOrder = ascending ? "asc" : "desc";
 
+    // Sort the rows based on the content of the clicked column
     rows.sort((rowA, rowB) => {
       var cellA = rowA.cells[columnIndex].innerText.trim();
       var cellB = rowB.cells[columnIndex].innerText.trim();
 
+      // If sorting by the year column (index 0), compare as numbers
       if (columnIndex === 0) {
         return ascending ? cellA - cellB : cellB - cellA;
       } else {
+        // Otherwise, sort as strings (for the race name column)
         return ascending
           ? cellA.localeCompare(cellB)
           : cellB.localeCompare(cellA);
       }
     });
 
-    // Clear and reinsert sorted rows
+    // Clear the table body and append the sorted rows
     tbody.innerHTML = "";
     rows.forEach((row, index) => {
-      row.className = "table-dark"; // Reapply row colors
+      row.className = "table-dark"; // Reapply row colors to maintain styling
       tbody.appendChild(row);
     });
   }
 </script>
+
 {% endblock %}

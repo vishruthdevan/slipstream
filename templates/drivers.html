@@ -31,7 +31,7 @@
 </div>
 
 <script>
-  // Function to sort the table based on the column index
+  // Function to sort the table based on the specified column index
   function sortTable(columnIndex) {
     var table,
       rows,
@@ -42,59 +42,62 @@
       shouldSwitch,
       dir,
       switchcount = 0;
-    table = document.getElementById("driversTable"); // Get the table by ID
-    switching = true;
-    // Set the sorting direction to ascending:
-    dir = "asc";
+    table = document.getElementById("driversTable"); // Get the table element by its ID
+    switching = true; // Flag to check if the table still needs sorting
+    dir = "asc"; // Set the initial sorting direction to ascending
 
-    // Keep looping until no switching is needed:
+    // Loop to continue sorting as long as switching is needed
     while (switching) {
       switching = false;
-      rows = table.rows;
-      // Loop through all table rows (except the first, which contains the headers):
+      rows = table.rows; // Get all the rows of the table
+      // Loop through all table rows (excluding the header row at index 0)
       for (i = 1; i < rows.length - 1; i++) {
         shouldSwitch = false;
-        x = rows[i].getElementsByTagName("TD")[columnIndex];
-        y = rows[i + 1].getElementsByTagName("TD")[columnIndex];
-        // Check if the two rows should switch:
+        x = rows[i].getElementsByTagName("TD")[columnIndex]; // Get the current row's cell (column) value for comparison
+        y = rows[i + 1].getElementsByTagName("TD")[columnIndex]; // Get the next row's cell (column) value for comparison
+
+        // Check if the rows should switch based on the current sorting direction
         if (dir == "asc") {
           if (columnIndex === 2) {
-            // For podiums, comparing numeric values
+            // For numeric columns like podiums (e.g., positions), compare numeric values
             if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
-              shouldSwitch = true;
+              shouldSwitch = true; // Mark for switching
               break;
             }
           } else {
-            // For name and nationality, compare alphabetically
+            // For textual columns (name, nationality), compare alphabetically (case-insensitive)
             if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-              shouldSwitch = true;
+              shouldSwitch = true; // Mark for switching
               break;
             }
           }
         } else if (dir == "desc") {
           if (columnIndex === 2) {
-            // For podiums, comparing numeric values
+            // For numeric columns like podiums, compare numeric values
             if (parseInt(x.innerHTML) < parseInt(y.innerHTML)) {
-              shouldSwitch = true;
+              shouldSwitch = true; // Mark for switching
               break;
             }
           } else {
-            // For name and nationality, compare alphabetically
+            // For textual columns (name, nationality), compare alphabetically (case-insensitive)
             if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-              shouldSwitch = true;
+              shouldSwitch = true; // Mark for switching
               break;
             }
           }
         }
       }
+
+      // If a switch is needed, perform the row swap
       if (shouldSwitch) {
-        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-        switching = true;
-        switchcount++;
+        rows[i].parentNode.insertBefore(rows[i + 1], rows[i]); // Move the row down
+        switching = true; // Set switching flag to continue sorting
+        switchcount++; // Increment the switch count to track how many switches were made
       } else {
+        // If no switch was made and the sorting direction was ascending, change direction to descending
         if (switchcount == 0 && dir == "asc") {
-          dir = "desc";
-          switching = true;
+          dir = "desc"; // Change sorting direction to descending
+          switching = true; // Set switching flag to continue sorting
         }
       }
     }

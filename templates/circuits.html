@@ -9,18 +9,16 @@
   <svg id="world-map" width="100%" height="100%"></svg>
 </div>
 
-<!-- Load D3.js -->
-<script src="https://d3js.org/d3.v6.min.js"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     var width = window.innerWidth, height = window.innerHeight * 0.9;
 
-    // Create an SVG element that covers the whole page
+    // Create an SVG element that covers the entire page (100% width and 90% height of the viewport)
     var svg = d3.select("#world-map")
       .attr("width", width)
       .attr("height", height);
 
-    // Projection focused on Europe
+    // Projection: Mercator projection focused on Europe
     var projection = d3.geoMercator()
       .scale(1000)  // Increased scale to zoom in
       .center([10, 50])  // Centered roughly around Central Europe
@@ -28,56 +26,56 @@
 
     var path = d3.geoPath().projection(projection);
 
-    // Enable zooming & panning
+    // Enable zooming & panning functionality on the map
     var zoom = d3.zoom()
-      .scaleExtent([1, 8])  // Limits the zoom levels
+      .scaleExtent([1, 8])  // Limits zoom levels between 1x and 8x
       .on("zoom", function (event) {
-        svg.selectAll("path, circle, text").attr("transform", event.transform);
+        svg.selectAll("path, circle, text").attr("transform", event.transform);  // Apply zoom transformations
       });
 
     svg.call(zoom);
 
-    // Load the world map data
+    // Load the world map data from a GeoJSON file and append the map to the SVG container
     d3.json("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson").then(function (world) {
       svg.append("g")
         .selectAll("path")
-        .data(world.features)
+        .data(world.features)  // Features of the world map (countries)
         .enter()
         .append("path")
-        .attr("d", path)
-        .attr("fill", "#333")
-        .attr("stroke", "#aaa");
+        .attr("d", path)  // Generate paths for each country using the projection
+        .attr("fill", "#333")  // Color the countries dark gray
+        .attr("stroke", "#aaa");  // Light gray border
 
-      // Circuit Data from Flask
-      var circuits = {{ circuits | tojson }};
+      // Get circuit data passed from Flask and plot the circuit locations
+      var circuits = {{ circuits | tojson }};  // Data passed from the server (Flask)
 
-      // Plot circuits
+      // Create red circles for each circuit on the map
       svg.selectAll("circle")
         .data(circuits)
         .enter()
         .append("circle")
-        .attr("cx", d => projection([d.longitude, d.latitude])[0])
-        .attr("cy", d => projection([d.longitude, d.latitude])[1])
-        .attr("r", 5)
-        .attr("fill", "red")
-        .attr("stroke", "white")
-        .attr("stroke-width", 1.5)
-        .style("cursor", "pointer")
-        .on("mouseover", function () { d3.select(this).attr("fill", "yellow"); })
-        .on("mouseout", function () { d3.select(this).attr("fill", "red"); })
-        .on("click", function (event, d) { window.location.href = `/circuits/${d.id}/`; });
+        .attr("cx", d => projection([d.longitude, d.latitude])[0])  // Calculate x position based on longitude
+        .attr("cy", d => projection([d.longitude, d.latitude])[1])  // Calculate y position based on latitude
+        .attr("r", 5)  // Radius of the circle (size of the circuit marker)
+        .attr("fill", "red")  // Initial fill color for the circle
+        .attr("stroke", "white")  // White border for the circle
+        .attr("stroke-width", 1.5)  // Width of the circle border
+        .style("cursor", "pointer")  // Change cursor to a pointer on hover
+        .on("mouseover", function () { d3.select(this).attr("fill", "yellow"); })  // Change color to yellow on hover
+        .on("mouseout", function () { d3.select(this).attr("fill", "red"); })  // Change back to red when hover ends
+        .on("click", function (event, d) { window.location.href = `/circuits/${d.id}/`; });  // Redirect to circuit detail page on click
 
-      // Add labels
+      // Add text labels next to each circuit
       svg.selectAll("text")
         .data(circuits)
         .enter()
         .append("text")
-        .attr("x", d => projection([d.longitude, d.latitude])[0] + 7)
-        .attr("y", d => projection([d.longitude, d.latitude])[1] + 3)
-        .attr("fill", "white")
-        .attr("font-size", "10px")
-        .attr("font-family", "Arial")
-        .text(d => d.name);
+        .attr("x", d => projection([d.longitude, d.latitude])[0] + 7)  // Position label slightly to the right of the circle
+        .attr("y", d => projection([d.longitude, d.latitude])[1] + 3)  // Position label slightly below the circle
+        .attr("fill", "white")  // White text color
+        .attr("font-size", "10px")  // Font size for labels
+        .attr("font-family", "Arial")  // Font family for labels
+        .text(d => d.name);  // Display circuit name as label
     });
   });
 </script>

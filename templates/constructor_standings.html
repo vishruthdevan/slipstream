@@ -57,32 +57,48 @@
 </div>
 
 <script>
-  // Change the year and reload the page with the selected year
+  // Function to change the selected year and reload the page with the new year parameter
   function changeYear() {
+    // Get the value of the selected year from the dropdown
     var selectedYear = document.getElementById("year-select").value;
+    
+    // Reload the page with the selected year as a query parameter in the URL
     window.location.href = "?year=" + selectedYear;
   }
 
-  // Function to sort the table by column index
+  // Function to sort the table by the clicked column index (ascending or descending)
   function sortTable(columnIndex) {
+    // Get the table element and extract its rows (excluding the header)
     var table = document.querySelector("table");
-    var rows = Array.from(table.rows).slice(1);
-    var isAscending = table.dataset.order !== "desc";
+    var rows = Array.from(table.rows).slice(1);  // Exclude the header row
+    
+    // Determine the current sorting direction (ascending or descending)
+    var isAscending = table.dataset.order !== "desc";  // Default to ascending if no order is set
 
+    // Sort the rows based on the content of the cells in the specified column
     rows.sort((rowA, rowB) => {
+      // Get the cell values of the two rows to be compared
       var cellA = rowA.cells[columnIndex].innerText.trim();
       var cellB = rowB.cells[columnIndex].innerText.trim();
 
+      // If the cell values are numeric, parse them as floats for proper numeric comparison
       if (!isNaN(cellA) && !isNaN(cellB)) {
         cellA = parseFloat(cellA);
         cellB = parseFloat(cellB);
       }
 
-      return isAscending ? cellA > cellB ? 1 : -1 : cellA < cellB ? 1 : -1;
+      // Compare the values depending on the sort direction (ascending or descending)
+      return isAscending 
+        ? cellA > cellB ? 1 : -1  // If ascending, return positive for a swap, otherwise negative
+        : cellA < cellB ? 1 : -1; // If descending, return positive for a swap, otherwise negative
     });
 
+    // Reorder the table rows based on the sorted order
     table.tBodies[0].append(...rows);
+
+    // Toggle the sorting direction for the next click (if the current order is ascending, set it to descending)
     table.dataset.order = isAscending ? "desc" : "asc";
   }
 </script>
+
 {% endblock %}
