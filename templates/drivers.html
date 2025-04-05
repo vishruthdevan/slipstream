@@ -9,9 +9,9 @@
     >
       <thead class="table-dark">
         <tr>
-          <th onclick="sortTable(0)">Name</th>
-          <th onclick="sortTable(1)">Nationality</th>
-          <th onclick="sortTable(2)">Podiums</th>
+          <th onclick="sortTable(0)" class="text-center">Name 🔽</th>
+          <th onclick="sortTable(1)" class="text-center">Nationality 🔽</th>
+          <th onclick="sortTable(2)" class="text-center">Podiums 🔽</th>
         </tr>
       </thead>
       <tbody>
@@ -20,9 +20,9 @@
           onclick="window.location='{{ url_for('drivers.driver_detail', driver_id=driver.id) }}'"
           style="cursor: pointer"
         >
-          <td>{{ driver.name }}</td>
-          <td>{{ driver.nationality }}</td>
-          <td>{{ driver.podiums }}</td>
+          <td class="text-center">{{ driver.name }}</td>
+          <td class="text-center">{{ driver.nationality }}</td>
+          <td class="text-center">{{ driver.podiums }}</td>
         </tr>
         {% endfor %}
       </tbody>

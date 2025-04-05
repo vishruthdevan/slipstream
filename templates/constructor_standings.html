@@ -20,10 +20,10 @@
     <table class="table table-hover table-striped table-dark shadow-sm text-light ">
       <thead class="table-dark">
         <tr>
-          <th onclick="sortTable(0)">Rank</th>
-          <th onclick="sortTable(1)">Constructor Name</th>
-          <th onclick="sortTable(2)">Points</th>
-          <th>Drivers & Their Points</th>
+          <th onclick="sortTable(0)" class="text-center">Rank 🔽</th>
+          <th onclick="sortTable(1)" class="text-center">Constructor Name 🔽</th>
+          <th onclick="sortTable(2)" class="text-center">Points 🔽</th>
+          <th class="text-center">Drivers & Their Points</th>
         </tr>
       </thead>
       <tbody>
@@ -32,10 +32,10 @@
           onclick="window.location='{{ url_for('constructors.constructor_detail', constructor_id=standing.constructor_id) }}'"
           style="cursor: pointer"
         >
-          <td>{{ standing.rank }}</td>
-          <td>{{ standing.name }}</td>
-          <td>{{ standing.points }}</td>
-          <td>
+          <td class="text-center">{{ standing.rank }}</td>
+          <td class="text-center">{{ standing.name }}</td>
+          <td class="text-center">{{ standing.points }}</td>
+          <td class="text-center">
             <ul class="list-unstyled">
               {% for driver in standing.drivers %}
               <li>{{ driver.name }} - {{ driver.points }} pts</li>
