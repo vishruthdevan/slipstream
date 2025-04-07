@@ -17,6 +17,23 @@ Account Name: vpa2112
 
 <http://34.148.99.119:8111/>
 
+
+## Feature details
+### Features of original proposal
+* Users can view information on races, driver, teams and results.
+* Users can search for past races by selecting a year, and then clicking on a venue, and can access details like race winners and podium finishers.
+*  Users can look up driver and teams stats, including season points and rankings.
+
+
+## New features for F1 db
+* Overlay of circuits on the world map based on their coordinates.
+* Position distribution of drivers, showing how often drivers finish in each position across all races (how many times they finished 1st, 2nd, etc.). This shows their overall consistency. 
+
+### Features not implemented
+* Lap analysis feature - Since there are over 500 thousand rows of lap data, creating plots for all of them did not seem scalable. Instead, we let users search for a driver's lap data given a year and circuit.
+* User personalisation - Since users can already search for their favourite drivers and teams conveniently, we feel this feature doesn't add a lot of value.
+
+
 ## Interesting Queries
 
 ### 1. Driver Detail Page (`/drivers/<driver_id>`)
