@@ -4,7 +4,8 @@ CREATE TABLE Circuit (
     City VARCHAR(100) NOT NULL,
     Country VARCHAR(50) NOT NULL,
     Latitude DECIMAL(9,6) CHECK (Latitude BETWEEN -90 AND 90),
-    Longitude DECIMAL(9,6) CHECK (Longitude BETWEEN -180 AND 180)
+    Longitude DECIMAL(9,6) CHECK (Longitude BETWEEN -180 AND 180),
+    Description TEXT,
 );
 
 CREATE TABLE Race (
