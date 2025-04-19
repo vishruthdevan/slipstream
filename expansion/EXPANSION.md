@@ -1,9 +1,9 @@
 # Project Part 4 - Expansion of `slipstream`
 
-| Name            | UNI      |
-|-----------------|----------|
-| Vishesh Arora   | vpa2112  |
-| Vishruth Devan  | vd2461   |
+| Name           | UNI     |
+| -------------- | ------- |
+| Vishesh Arora  | vpa2112 |
+| Vishruth Devan | vd2461  |
 
 ---
 
@@ -13,13 +13,86 @@ Account Name: vpa2112
 
 ---
 
-## New Extension
+## Expansion
 
-### Constructor IDs Integration: Driver Table Enhancement
+## Full-Text Search
+
+To enhance the analytical capabilities of our database and enable natural language querying, we introduced a `Description` field to the `Circuit` table. This addition plays a crucial role in supporting full-text search, allowing us to extract meaningful insights from unstructured data.
+
+### Rationale
+
+1. **Addition of a `Description` Column:**  
+   We extended the `Circuit` table with a `TEXT` column named `Description`. This field is intended to hold rich, paragraph-style textual content that describes each circuit in detail. Our choice aligns with full-text search best practices, where the target attribute should resemble document-style data rather than short strings or identifiers.
+
+2. **Data Sourcing:**  
+   The content for each circuit’s `Description` was programmatically gathered using a Python script that scrapes the introductory paragraph from each circuit’s corresponding Wikipedia page. This ensures that the data is informative, standardized, and relevant for natural-language querying.
+
+3. **Use of Full-Text Search (FTS):**  
+   To enable efficient and flexible text-based querying, we created a GIN (Generalized Inverted Index) on the `Description` column. This supports advanced search capabilities such as proximity matching, phrase detection, and synonym expansion, all of which are useful for our project’s querying needs.
+
+### SQL to Add New Column
+
+```sql
+ALTER TABLE Circuit
+ADD COLUMN Description TEXT;
+```
+
+### Creating a Full-Text Search Index
+
+```sql
+CREATE INDEX idx_circuit_description_fts
+ON Circuit
+USING GIN (to_tsvector('english', Description));
+```
+
+### Example Queries Using Full-Text Search
+
+With the new `Description` column and full-text search index in place, we can now run powerful semantic queries. Below are three representative examples that demonstrate the value of this integration:
+
+1. Retrieve Street Circuits
+   This query finds circuits described explicitly as “street circuits”, using the `<->` operator to enforce that the words "street" and "circuit" appear directly next to each other.
+
+```sql
+SELECT name, city, country
+FROM Circuit
+WHERE to_tsvector('english', Description) @@ to_tsquery('street <-> circuit');
+```
+
+![ts example 1](images/ts_example1.png)
+
+2. Find Circuits Mentioning Lewis Hamilton
+   This query identifies circuits where Lewis Hamilton is a notable figure, based on mentions of his name in the circuit description. This could reflect historical significance or iconic performances.
+
+```sql
+SELECT name, city, country
+FROM Circuit
+WHERE to_tsvector('english', Description) @@ to_tsquery('lewis & hamilton');
+```
+
+![ts example 2](images/ts_example2.png)
+
+3. Identify Circuits with Accidents
+   This query returns circuits where accidents are a notable part of their history, based on keywords such as “accident,” “crash,” “collision,” or “incident” in the description.
+
+```sql
+SELECT name, city, country
+FROM Circuit
+WHERE to_tsvector('english', Description) @@ to_tsquery('accident | crash | collision | incident');
+```
+
+![ts example 3](images/ts_example3.png)
+
+### Summary
+
+This enhancement aligns with the project's broader goal of analyzing circuits beyond just their geographic and technical attributes. By integrating natural language data, we enable richer, more nuanced queries that can surface historical context, driver relevance, and safety characteristics — all of which are central to understanding circuit significance in the world of motorsports.
+
+---
+
+## Array Attribute
 
 To improve the relational capabilities of our database and enable more efficient querying of driver-constructor relationships, we introduced a new column `constructor_ids` to the `Driver` table. This column stores an array of constructor IDs associated with each driver, consolidating data from multiple tables into a single attribute.
 
-### Schema Modification Rationale
+### Rationale
 
 1. **Addition of a `constructor_ids` Column:**  
    We extended the `Driver` table with an `INTEGER[]` column named `constructor_ids`. This column holds an array of constructor IDs that a driver has been associated with across various contexts (e.g., laps, qualifying results, races, etc.). This denormalization simplifies queries that need to analyze driver-constructor relationships.
@@ -97,79 +170,6 @@ This enhancement simplifies the analysis of driver-constructor relationships by 
 
 ---
 
-## Full-Text Search Extension: Text Attribute Integration
-
-To enhance the analytical capabilities of our database and enable natural language querying, we introduced a `Description` field to the `Circuit` table. This addition plays a crucial role in supporting full-text search, allowing us to extract meaningful insights from unstructured data.
-
-### Schema Modification Rationale
-
-1. **Addition of a `Description` Column:**  
-   We extended the `Circuit` table with a `TEXT` column named `Description`. This field is intended to hold rich, paragraph-style textual content that describes each circuit in detail. Our choice aligns with full-text search best practices, where the target attribute should resemble document-style data rather than short strings or identifiers.
-
-2. **Data Sourcing:**  
-   The content for each circuit’s `Description` was programmatically gathered using a Python script that scrapes the introductory paragraph from each circuit’s corresponding Wikipedia page. This ensures that the data is informative, standardized, and relevant for natural-language querying.
-
-3. **Use of Full-Text Search (FTS):**  
-   To enable efficient and flexible text-based querying, we created a GIN (Generalized Inverted Index) on the `Description` column. This supports advanced search capabilities such as proximity matching, phrase detection, and synonym expansion, all of which are useful for our project’s querying needs.
-
-### SQL to Add New Column
-
-```sql
-ALTER TABLE Circuit
-ADD COLUMN Description TEXT;
-```
-
-### Creating a Full-Text Search Index
-
-```sql
-CREATE INDEX idx_circuit_description_fts
-ON Circuit
-USING GIN (to_tsvector('english', Description));
-```
-
-### Example Queries Using Full-Text Search
-
-With the new `Description` column and full-text search index in place, we can now run powerful semantic queries. Below are three representative examples that demonstrate the value of this integration:
-
-1. Retrieve Street Circuits
-   This query finds circuits described explicitly as “street circuits”, using the `<->` operator to enforce that the words "street" and "circuit" appear directly next to each other.
-
-```sql
-SELECT name, city, country
-FROM Circuit
-WHERE to_tsvector('english', Description) @@ to_tsquery('street <-> circuit');
-```
-
-![ts example 1](images/ts_example1.png)
-
-2. Find Circuits Mentioning Lewis Hamilton
-   This query identifies circuits where Lewis Hamilton is a notable figure, based on mentions of his name in the circuit description. This could reflect historical significance or iconic performances.
-
-```sql
-SELECT name, city, country
-FROM Circuit
-WHERE to_tsvector('english', Description) @@ to_tsquery('lewis & hamilton');
-```
-
-![ts example 2](images/ts_example2.png)
-
-3. Identify Circuits with Accidents
-   This query returns circuits where accidents are a notable part of their history, based on keywords such as “accident,” “crash,” “collision,” or “incident” in the description.
-
-```sql
-SELECT name, city, country
-FROM Circuit
-WHERE to_tsvector('english', Description) @@ to_tsquery('accident | crash | collision | incident');
-```
-
-![ts example 3](images/ts_example3.png)
-
-### Summary
-
-This enhancement aligns with the project's broader goal of analyzing circuits beyond just their geographic and technical attributes. By integrating natural language data, we enable richer, more nuanced queries that can surface historical context, driver relevance, and safety characteristics — all of which are central to understanding circuit significance in the world of motorsports.
-
----
-
 ## Trigger to Prevent Driver Number Conflicts
 
 In order to maintain data integrity and enforce a key business rule — that no two drivers in the same Formula 1 season can share the same driver number — we implemented a trigger on the `SeasonStandings` table. This trigger ensures that each driver number is unique within a given year, preventing accidental conflicts during data entry or updates.
@@ -221,7 +221,7 @@ FOR EACH ROW
 EXECUTE FUNCTION check_driver_number_conflict();
 ```
 
-### Example Scenario: Trigger in Action
+### Example Scenario
 
 Let’s walk through a real example where this trigger prevents a conflict.
 
