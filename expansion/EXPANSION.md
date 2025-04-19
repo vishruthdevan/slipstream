@@ -13,6 +13,90 @@ Account Name: vpa2112
 
 ---
 
+## New Extension
+
+### Constructor IDs Integration: Driver Table Enhancement
+
+To improve the relational capabilities of our database and enable more efficient querying of driver-constructor relationships, we introduced a new column `constructor_ids` to the `Driver` table. This column stores an array of constructor IDs associated with each driver, consolidating data from multiple tables into a single attribute.
+
+### Schema Modification Rationale
+
+1. **Addition of a `constructor_ids` Column:**  
+   We extended the `Driver` table with an `INTEGER[]` column named `constructor_ids`. This column holds an array of constructor IDs that a driver has been associated with across various contexts (e.g., laps, qualifying results, races, etc.). This denormalization simplifies queries that need to analyze driver-constructor relationships.
+
+2. **Data Aggregation:**  
+   The data for the `constructor_ids` column was populated by aggregating constructor IDs from multiple tables (`Lap`, `QualifyingResults`, `SprintResults`, `RaceResults`, and `SeasonStandings`). This ensures that the column reflects a comprehensive view of all constructors a driver has worked with.
+
+3. **Default Value:**  
+   The column is initialized with an empty array (`'{}'::INTEGER[]`) to ensure consistency and avoid null values.
+
+### SQL to Add New Column
+
+```sql
+ALTER TABLE Driver
+ADD COLUMN constructor_ids INTEGER[] DEFAULT '{}'::INTEGER[];
+```
+
+### Populating the `constructor_ids` Column
+
+```sql
+UPDATE Driver d
+SET constructor_ids = sub.cons_list
+FROM (
+  SELECT driverid,
+         array_agg(DISTINCT constructorid) AS cons_list
+  FROM (
+    SELECT driverid, constructorid FROM Lap
+    UNION
+    SELECT driverid, constructorid FROM QualifyingResults
+    UNION
+    SELECT driverid, constructorid FROM SprintResults
+    UNION
+    SELECT driverid, constructorid FROM RaceResults
+    UNION
+    SELECT driverid, constructorid FROM SeasonStandings
+  ) AS all_drives
+  GROUP BY driverid
+) AS sub
+WHERE d.driverid = sub.driverid;
+```
+
+### Example Queries Using `constructor_ids`
+
+With the new `constructor_ids` column in place, we can now run queries that leverage this consolidated data. Below are three examples:
+
+1. Find Drivers Associated with a Specific Constructor  
+   This query retrieves all drivers who have been associated with a specific constructor (e.g., constructor ID `1`).
+
+```sql
+SELECT driverid, firstname, lastname
+FROM Driver
+WHERE 1 = ANY(constructor_ids);
+```
+
+2. Count Constructors per Driver  
+   This query calculates the number of unique constructors each driver has been associated with.
+
+```sql
+SELECT driverid, firstname, lastname, array_length(constructor_ids, 1) AS constructor_count
+FROM Driver;
+```
+
+3. Find Drivers Associated with More Than Four Constructors  
+   This query retrieves drivers who have been associated with more than four constructors, highlighting those who may have had bumpy relationships with constructors.
+
+```sql
+SELECT driverid, firstname, lastname
+FROM Driver
+WHERE array_length(constructor_ids, 1) > 4;
+```
+
+### Summary
+
+This enhancement simplifies the analysis of driver-constructor relationships by consolidating data into a single column. It reduces the need for complex joins across multiple tables and improves query performance for use cases involving constructor associations.
+
+---
+
 ## Full-Text Search Extension: Text Attribute Integration
 
 To enhance the analytical capabilities of our database and enable natural language querying, we introduced a `Description` field to the `Circuit` table. This addition plays a crucial role in supporting full-text search, allowing us to extract meaningful insights from unstructured data.
